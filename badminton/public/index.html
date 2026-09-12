@@ -1,0 +1,1477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0E3E36">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Badminton tournament</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --mat:#17564B;
+  --mat-deep:#0E3E36;
+  --mat-dark:#08302A;
+  --paper:#E9EEE9;
+  --card:#FFFFFF;
+  --ink:#13221F;
+  --ink-soft:#546A63;
+  --rule:#D3DDD6;
+  --cork:#B9781F;
+  --cork-text:#8A5610;
+  --cork-pale:#FBF0DD;
+  --alert:#9C3A28;
+  --shade:#F3F7F2;
+
+  --sans:'Barlow','Helvetica Neue',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --cond:'Barlow Condensed','Roboto Condensed','Helvetica Neue',system-ui,-apple-system,sans-serif;
+  --gutter:14px;
+}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.5 var(--sans);
+  -webkit-tap-highlight-color:rgba(23,86,75,.15);
+  overscroll-behavior-y:none;
+}
+
+/* ---- masthead: a court seen from the umpire's chair ---- */
+.masthead{
+  background:var(--mat-deep);color:#fff;
+  padding:calc(env(safe-area-inset-top) + 14px) var(--gutter) 0;
+  position:sticky;top:0;z-index:20;
+  box-shadow:0 1px 0 rgba(0,0,0,.15);
+}
+.masthead-in{max-width:760px;margin:0 auto}
+#title{
+  font:700 27px/1.05 var(--cond);
+  letter-spacing:.005em;margin:0;
+  overflow-wrap:anywhere;
+}
+#subtitle{
+  margin:3px 0 12px;color:#A9C9C0;
+  font:500 14px/1.3 var(--sans);
+}
+#tabs{
+  display:flex;gap:0;max-width:760px;margin:0 auto;
+  overflow-x:auto;scrollbar-width:none;
+  border-top:1.5px solid rgba(255,255,255,.5);
+}
+#tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1 0 auto;appearance:none;background:transparent;border:0;
+  border-right:1px solid rgba(255,255,255,.22);
+  color:#B7D2CA;font:600 15px/1 var(--cond);
+  letter-spacing:.02em;padding:13px 11px;cursor:pointer;
+  white-space:nowrap;
+}
+.tab:last-child{border-right:0}
+.tab.on{background:var(--paper);color:var(--mat-deep)}
+
+/* ---- page ---- */
+main{max-width:760px;margin:0 auto;padding:16px var(--gutter) calc(env(safe-area-inset-bottom) + 56px)}
+.lede{margin:0 0 14px;color:var(--ink-soft);font-size:14.5px;max-width:62ch}
+
+.panel{
+  background:var(--card);border:1px solid var(--rule);border-radius:10px;
+  padding:14px;margin:0 0 14px;
+}
+.panel h2{
+  font:600 20px/1.15 var(--cond);margin:0 0 10px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:10px;
+}
+.panel h3{font:600 16px/1.2 var(--cond);margin:16px 0 8px;color:var(--ink-soft)}
+.panel h3.round{
+  margin:14px 0 8px;color:var(--mat);
+  border-bottom:1px solid var(--rule);padding-bottom:5px;
+}
+.count{font:500 13px/1 var(--sans);color:var(--ink-soft);white-space:nowrap}
+.hint{margin:0 0 10px;color:var(--ink-soft);font-size:14px;max-width:62ch}
+
+/* ---- form furniture ---- */
+.fields{display:grid;gap:10px}
+.field{display:grid;gap:4px}
+.field>span{font-size:13.5px;color:var(--ink-soft)}
+input[type=text],textarea,select{
+  font:400 16px/1.3 var(--sans);color:var(--ink);
+  background:#fff;border:1px solid var(--rule);border-radius:7px;
+  padding:10px;width:100%;min-height:44px;
+}
+textarea{min-height:100px;resize:vertical}
+select{
+  appearance:none;
+  background-image:linear-gradient(45deg,transparent 50%,var(--ink-soft) 50%),linear-gradient(135deg,var(--ink-soft) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;
+  background-size:5px 5px,5px 5px;background-repeat:no-repeat;
+  padding-right:32px;
+}
+input:focus-visible,textarea:focus-visible,select:focus-visible,button:focus-visible{
+  outline:2.5px solid var(--cork);outline-offset:1px;
+}
+.check{display:flex;align-items:center;gap:9px;margin:10px 0;font-size:15px}
+.check input{width:21px;height:21px;accent-color:var(--mat)}
+
+.segmented{display:flex;border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.seg{
+  flex:1;appearance:none;background:#fff;border:0;border-right:1px solid var(--rule);
+  font:600 15px/1 var(--cond);letter-spacing:.02em;color:var(--ink-soft);
+  padding:13px 8px;cursor:pointer;min-height:46px;
+}
+.seg:last-child{border-right:0}
+.seg.on{background:var(--mat);color:#fff}
+
+.btn{
+  appearance:none;background:#fff;border:1px solid var(--mat);color:var(--mat);
+  border-radius:8px;padding:11px 15px;min-height:46px;cursor:pointer;
+  font:600 15px/1 var(--cond);letter-spacing:.02em;
+}
+.btn.primary{background:var(--mat);color:#fff}
+.btn.quiet{border-color:var(--rule);color:var(--ink-soft)}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px}
+.row-btns.spaced{margin-top:14px}
+.paste{margin:12px 0;display:grid;gap:8px}
+
+/* ---- roster ---- */
+.roster{display:grid;gap:14px}
+.roster-group{border-top:1.5px solid var(--mat);padding-top:9px}
+.gname{
+  font:600 17px/1.2 var(--cond)!important;
+  border:0!important;border-bottom:1px dashed var(--rule)!important;
+  border-radius:0!important;padding:4px 0!important;min-height:34px!important;
+}
+.roster-row{display:flex;align-items:center;gap:9px;margin-top:7px}
+.seat{
+  flex:0 0 24px;height:24px;border-radius:50%;background:var(--shade);
+  color:var(--ink-soft);font:600 13px/24px var(--cond);text-align:center;
+}
+
+/* ---- the scoreboard card: this is the working surface ---- */
+.match{
+  border:1px solid var(--rule);border-radius:9px;
+  padding:10px 10px 8px;margin:0 0 10px;background:#fff;
+}
+.match.settled{border-color:#B9CBC2;background:var(--shade)}
+.match-top{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-bottom:9px}
+.tag{font:600 13px/1 var(--cond);letter-spacing:.03em;color:var(--ink-soft)}
+.prov{
+  font:500 11.5px/1 var(--sans);color:var(--cork-text);
+  background:var(--cork-pale);border-radius:20px;padding:4px 8px;
+}
+.note{
+  margin-left:auto;flex:0 1 136px;min-height:34px!important;
+  padding:4px 8px!important;
+  border-style:dashed!important;background:transparent!important;
+}
+
+.board{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) repeat(var(--games),var(--cell));
+  gap:5px;align-items:center;
+}
+.board.g1{--cell:58px}
+.board.g3{--cell:44px}
+.board.g5{--cell:37px;gap:4px}
+.board.g5 .sc{font-size:17px}
+.col-key{
+  font:600 11.5px/1 var(--cond);color:var(--ink-soft);
+  text-align:center;padding-bottom:1px;
+}
+.who{
+  font:500 15.5px/1.2 var(--sans);
+  padding:6px 0 6px 9px;border-left:3px solid var(--rule);
+  overflow-wrap:anywhere;
+}
+.who.won{font-weight:600;border-left-color:var(--mat)}
+.sc{
+  height:44px;padding:0!important;text-align:center;
+  font:600 19px/1 var(--sans);font-variant-numeric:tabular-nums;
+  border-radius:6px;min-height:44px!important;
+}
+.sc:disabled{background:var(--shade);color:#A9B7B1}
+.sc.flag{border-color:var(--cork);background:var(--cork-pale)}
+
+.match-bottom{
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px;
+  margin-top:9px;padding-top:8px;border-top:1px solid var(--rule);
+}
+.verdict{font-size:13.5px;color:var(--ink-soft);flex:1 1 auto;min-width:130px}
+.pick{display:flex;gap:6px;flex-wrap:wrap}
+.mini{
+  appearance:none;background:transparent;border:1px solid var(--rule);
+  color:var(--ink-soft);border-radius:20px;padding:6px 10px;min-height:32px;
+  font:500 12.5px/1 var(--sans);cursor:pointer;
+}
+.mini.on{background:var(--mat);border-color:var(--mat);color:#fff}
+.issues{margin:7px 0 0;font-size:12.5px;color:var(--cork-text)}
+.swap{display:flex;gap:8px;margin:-4px 0 16px}
+.swap .picker{flex:1;min-width:0;min-height:40px;padding:7px 28px 7px 9px}
+
+/* ---- tables ---- */
+.table{width:100%;border-collapse:collapse;font-size:14.5px}
+.table th{
+  font:600 12px/1 var(--cond);letter-spacing:.04em;color:var(--ink-soft);
+  text-align:left;padding:0 5px 7px;border-bottom:1.5px solid var(--mat);
+}
+.table td{padding:9px 4px;border-bottom:1px solid var(--rule)}
+.table .c{text-align:center}
+.table .num{font-variant-numeric:tabular-nums;color:var(--ink-soft);font-size:13.5px}
+.table .pos{font:600 15px/1 var(--cond);color:var(--ink-soft);width:24px}
+.table .pl{overflow-wrap:anywhere}
+.table tr.through .pos{color:var(--mat)}
+.table tr.through .pl{font-weight:600}
+.dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--mat);margin-left:6px;vertical-align:middle;
+}
+.nudge{white-space:nowrap;width:50px}
+@media (max-width:559px){.table .drop{display:none}}
+.arrow{
+  appearance:none;background:transparent;border:0;color:var(--mat);
+  font-size:11px;padding:7px 4px;cursor:pointer;line-height:1;
+}
+.arrow:disabled{color:#C3CFC9}
+
+/* ---- seeds ---- */
+.seeds{list-style:none;margin:0 0 14px;padding:0;display:grid;gap:7px}
+.seeds li{display:flex;align-items:center;gap:9px}
+.rank{
+  flex:0 0 26px;height:26px;border-radius:50%;background:var(--mat);color:#fff;
+  font:600 14px/26px var(--cond);text-align:center;
+}
+
+/* ---- summary ---- */
+.crown{
+  background:var(--mat-deep);border-color:var(--mat-deep);color:#fff;
+  text-align:center;padding:22px 14px;
+}
+.crown-label{margin:0;font:600 13px/1 var(--cond);letter-spacing:.09em;color:#8FBAAE}
+.crown-name{
+  margin:7px 0 0;font:700 clamp(30px,9vw,50px)/1 var(--cond);
+  overflow-wrap:anywhere;
+}
+.crown-name.pending{color:#6E9C90;font-size:clamp(22px,6vw,34px)}
+.crown-sub{margin:8px 0 0;color:#A9C9C0;font-size:14.5px}
+.bracket{display:grid;gap:16px}
+.bcol h3{margin:0 0 8px;color:var(--mat);border-bottom:1.5px solid var(--mat);padding-bottom:5px}
+.bmatch{border:1px solid var(--rule);border-radius:8px;padding:8px 10px;margin-bottom:8px}
+.brow{
+  display:flex;justify-content:space-between;gap:10px;
+  padding:4px 0;font-size:14.5px;color:var(--ink-soft);
+}
+.brow.won{color:var(--ink);font-weight:600}
+.brow b{font-variant-numeric:tabular-nums}
+.bscore{
+  margin-top:5px;padding-top:5px;border-top:1px dotted var(--rule);
+  font-size:12.5px;color:var(--ink-soft);font-variant-numeric:tabular-nums;
+}
+.line{margin:0 0 7px;font-size:14.5px}
+.line b{font-weight:600}
+
+/* ---- toast ---- */
+#toast{
+  position:fixed;left:50%;transform:translate(-50%,120%);
+  bottom:calc(env(safe-area-inset-bottom) + 16px);
+  background:var(--mat-dark);color:#fff;border-radius:22px;
+  padding:11px 18px;font-size:14.5px;max-width:88vw;text-align:center;
+  transition:transform .22s ease;z-index:40;pointer-events:none;
+}
+#toast.on{transform:translate(-50%,0)}
+
+#fileIn{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+footer.foot{
+  max-width:760px;margin:0 auto;padding:0 var(--gutter) 30px;
+  color:var(--ink-soft);font-size:13px;
+}
+
+@media (min-width:640px){
+  :root{--gutter:20px}
+  .fields{grid-template-columns:1fr 1fr}
+  .roster{grid-template-columns:1fr 1fr}
+  .board.g1{--cell:66px}
+  .board.g3{--cell:52px}
+  .board.g5{--cell:46px;gap:5px}
+  .bracket{grid-template-columns:repeat(3,1fr);align-items:start}
+  #title{font-size:32px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+
+@media print{
+  .masthead{position:static;background:#fff;color:#000;box-shadow:none}
+  #subtitle{color:#444}
+  #tabs,.no-print,.pick,.nudge,.note,.swap,#toast{display:none!important}
+  body{background:#fff}
+  .panel{break-inside:avoid;border-color:#999}
+  .match{break-inside:avoid}
+  .crown{background:#fff;color:#000;border-color:#000}
+  .crown-name,.crown-label,.crown-sub{color:#000}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-in">
+    <h1 id="title">Badminton tournament</h1>
+    <p id="subtitle"></p>
+  </div>
+  <div id="tabs"></div>
+</header>
+
+<main id="app"></main>
+
+<footer class="foot">
+  <p>Group stage into quarter-finals, semi-finals and a final. Everything on this page can be edited, including results already entered.</p>
+</footer>
+
+<input type="file" id="fileIn" accept=".json,application/json">
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   Badminton tournament — data model and rules engine.
+   Pure functions, no DOM. Shared by the app and the JSON builder.
+   ============================================================ */
+
+var GROUP_IDS = ['A', 'B', 'C', 'D'];
+
+function defaultMeta() {
+  return { name: 'Club Badminton Championship', venue: '', date: '' };
+}
+
+function defaultConfig(format) {
+  return {
+    format: format === 12 ? 12 : 16, // 12 = four groups of three, 16 = four groups of four
+    pointsToWin: 21,                 // any number you like
+    winByTwo: true,
+    cap: 30,                         // 0 = no cap
+    gamesPerMatch: 3,                // best of 3
+    thirdPlace: false
+  };
+}
+
+function emptyGames(n) {
+  var out = [];
+  for (var i = 0; i < n; i++) out.push([null, null]);
+  return out;
+}
+
+function makeGroups(format) {
+  var per = format === 12 ? 3 : 4;
+  return GROUP_IDS.map(function (g) {
+    var players = [];
+    for (var i = 1; i <= per; i++) players.push({ id: g + i, name: 'Player ' + g + i });
+    return { id: g, name: 'Group ' + g, players: players };
+  });
+}
+
+/* Circle method. Returns an array of rounds; each round is an array of [idA, idB]. */
+function roundRobin(ids) {
+  var list = ids.slice();
+  var BYE = '\u0000bye';
+  if (list.length % 2) list.push(BYE);
+  var n = list.length;
+  var rounds = [];
+  if (n < 2) return rounds;
+  for (var r = 0; r < n - 1; r++) {
+    var pairs = [];
+    for (var i = 0; i < n / 2; i++) {
+      var a = list[i], b = list[n - 1 - i];
+      if (a === BYE || b === BYE) continue;
+      pairs.push(r % 2 ? [b, a] : [a, b]);
+    }
+    if (pairs.length) rounds.push(pairs);
+    list = [list[0]].concat([list[n - 1]], list.slice(1, n - 1));
+  }
+  return rounds;
+}
+
+function buildGroupMatches(state) {
+  var out = [];
+  state.groups.forEach(function (g) {
+    roundRobin(g.players.map(function (p) { return p.id; })).forEach(function (pairs, ri) {
+      pairs.forEach(function (pr, pi) {
+        out.push({
+          id: 'G' + g.id + '-' + (ri + 1) + (pi + 1),
+          stage: 'group',
+          group: g.id,
+          round: ri + 1,
+          a: { k: 'player', id: pr[0] },
+          b: { k: 'player', id: pr[1] },
+          games: emptyGames(state.config.gamesPerMatch),
+          winner: null,
+          note: ''
+        });
+      });
+    });
+  });
+  return out;
+}
+
+function buildKnockoutMatches(state) {
+  var n = state.config.gamesPerMatch;
+  function ko(id, stage, label, a, b) {
+    return { id: id, stage: stage, label: label, a: a, b: b, games: emptyGames(n), winner: null, note: '' };
+  }
+  return [
+    /* Rule 5 + 6: A vs B and C vs D, group winner against the runner-up of the paired group. */
+    ko('QF1', 'qf', 'Quarter-final 1', { k: 'grouppos', group: 'A', pos: 1 }, { k: 'grouppos', group: 'B', pos: 2 }),
+    ko('QF2', 'qf', 'Quarter-final 2', { k: 'grouppos', group: 'B', pos: 1 }, { k: 'grouppos', group: 'A', pos: 2 }),
+    ko('QF3', 'qf', 'Quarter-final 3', { k: 'grouppos', group: 'C', pos: 1 }, { k: 'grouppos', group: 'D', pos: 2 }),
+    ko('QF4', 'qf', 'Quarter-final 4', { k: 'grouppos', group: 'D', pos: 1 }, { k: 'grouppos', group: 'C', pos: 2 }),
+    /* Rule 7: of the four winners, first meets fourth and second meets third. */
+    ko('SF1', 'sf', 'Semi-final 1', { k: 'seed', n: 1 }, { k: 'seed', n: 4 }),
+    ko('SF2', 'sf', 'Semi-final 2', { k: 'seed', n: 2 }, { k: 'seed', n: 3 }),
+    ko('TP', 'third', 'Third place', { k: 'loser', of: 'SF1' }, { k: 'loser', of: 'SF2' }),
+    ko('F', 'final', 'Final', { k: 'winner', of: 'SF1' }, { k: 'winner', of: 'SF2' })
+  ];
+}
+
+function makeState(format) {
+  var s = {
+    version: 1,
+    meta: defaultMeta(),
+    config: defaultConfig(format),
+    groups: makeGroups(format === 12 ? 12 : 16),
+    matches: [],
+    standingOverride: {},
+    seedOverride: {}
+  };
+  s.matches = buildGroupMatches(s).concat(buildKnockoutMatches(s));
+  return touch(s);
+}
+
+/* ---------- lookups ---------- */
+
+function allPlayers(state) {
+  var out = [];
+  state.groups.forEach(function (g) {
+    g.players.forEach(function (p) { out.push({ id: p.id, name: p.name, group: g.id }); });
+  });
+  return out;
+}
+
+function findPlayer(state, id) {
+  var hit = null;
+  state.groups.forEach(function (g) {
+    g.players.forEach(function (p) { if (p.id === id) hit = p; });
+  });
+  return hit;
+}
+
+function playerName(state, id) {
+  var p = findPlayer(state, id);
+  return p ? p.name : '';
+}
+
+function findMatch(state, id) {
+  for (var i = 0; i < state.matches.length; i++) if (state.matches[i].id === id) return state.matches[i];
+  return null;
+}
+
+/* ---------- scoring ---------- */
+
+function gameWinner(g) {
+  var a = g[0], b = g[1];
+  if (a === null || b === null || a === '' || b === '' || a === b) return null;
+  return a > b ? 'a' : 'b';
+}
+
+function gamesWon(m) {
+  var a = 0, b = 0;
+  m.games.forEach(function (g) {
+    var w = gameWinner(g);
+    if (w === 'a') a++; else if (w === 'b') b++;
+  });
+  return [a, b];
+}
+
+function gamesNeeded(state) {
+  return Math.floor(state.config.gamesPerMatch / 2) + 1;
+}
+
+function matchWinner(state, m) {
+  if (m.winner === 'a' || m.winner === 'b') return m.winner;
+  var need = gamesNeeded(state);
+  var gw = gamesWon(m);
+  if (gw[0] >= need) return 'a';
+  if (gw[1] >= need) return 'b';
+  return null;
+}
+
+/* Soft warning only — a score is never rejected. */
+function gameIssue(config, g) {
+  var a = g[0], b = g[1];
+  if (a === null || b === null) return null;
+  if (a === b) return 'Both players on ' + a;
+  var hi = Math.max(a, b), lo = Math.min(a, b);
+  var target = config.pointsToWin;
+  var cap = config.cap > 0 ? config.cap : Infinity;
+  if (hi < target) return 'Game ends at ' + target;
+  if (hi > cap) return 'Above the ' + config.cap + '-point cap';
+  if (config.winByTwo) {
+    if (hi === target && hi - lo < 2) return 'Needs a two-point lead';
+    if (hi > target && hi - lo !== 2 && hi !== cap) return 'Past ' + target + ' the lead should be two';
+  }
+  return null;
+}
+
+/* ---------- group tables ---------- */
+
+function headToHead(state, gid, x, y) {
+  var res = 0;
+  state.matches.forEach(function (m) {
+    if (m.stage !== 'group' || m.group !== gid) return;
+    var A = resolveSlot(state, m.a), B = resolveSlot(state, m.b);
+    var w = matchWinner(state, m);
+    if (!w) return;
+    var winnerId = w === 'a' ? A : B;
+    if ((A === x && B === y) || (A === y && B === x)) res = winnerId === x ? -1 : 1;
+  });
+  return res;
+}
+
+function touch(state) {
+  state._memo = {};
+  return state;
+}
+
+function standings(state, gid) {
+  if (!state._memo) state._memo = {};
+  var ck = 'st:' + gid;
+  if (state._memo[ck]) return state._memo[ck];
+  var g = null;
+  state.groups.forEach(function (x) { if (x.id === gid) g = x; });
+  if (!g) return [];
+
+  var rows = {};
+  g.players.forEach(function (p) {
+    rows[p.id] = { id: p.id, name: p.name, played: 0, won: 0, lost: 0, gw: 0, gl: 0, pf: 0, pa: 0 };
+  });
+
+  state.matches.forEach(function (m) {
+    if (m.stage !== 'group' || m.group !== gid) return;
+    var A = resolveSlot(state, m.a), B = resolveSlot(state, m.b);
+    if (!rows[A] || !rows[B]) return;
+    m.games.forEach(function (game) {
+      if (game[0] === null || game[1] === null) return;
+      rows[A].pf += game[0]; rows[A].pa += game[1];
+      rows[B].pf += game[1]; rows[B].pa += game[0];
+      var w = gameWinner(game);
+      if (w === 'a') { rows[A].gw++; rows[B].gl++; }
+      else if (w === 'b') { rows[B].gw++; rows[A].gl++; }
+    });
+    var mw = matchWinner(state, m);
+    if (mw) {
+      rows[A].played++; rows[B].played++;
+      if (mw === 'a') { rows[A].won++; rows[B].lost++; }
+      else { rows[B].won++; rows[A].lost++; }
+    }
+  });
+
+  var list = Object.keys(rows).map(function (k) { return rows[k]; });
+  list.sort(function (p, q) {
+    if (q.won !== p.won) return q.won - p.won;
+    var h = headToHead(state, gid, p.id, q.id);
+    if (h) return h;
+    var pd = p.gw - p.gl, qd = q.gw - q.gl;
+    if (qd !== pd) return qd - pd;
+    var pp = p.pf - p.pa, qp = q.pf - q.pa;
+    if (qp !== pp) return qp - pp;
+    if (q.pf !== p.pf) return q.pf - p.pf;
+    return String(p.name).localeCompare(String(q.name));
+  });
+
+  var ov = (state.standingOverride || {})[gid];
+  if (ov && ov.length) {
+    var picked = [];
+    ov.forEach(function (id) {
+      list.forEach(function (r) { if (r.id === id && picked.indexOf(r) < 0) picked.push(r); });
+    });
+    list = picked.concat(list.filter(function (r) { return picked.indexOf(r) < 0; }));
+  }
+  state._memo[ck] = list;
+  return list;
+}
+
+function groupComplete(state, gid) {
+  var done = true;
+  state.matches.forEach(function (m) {
+    if (m.stage === 'group' && m.group === gid && !matchWinner(state, m)) done = false;
+  });
+  return done;
+}
+
+/* ---------- bracket ---------- */
+
+function statsFor(state, keep) {
+  var st = {};
+  function row(id) {
+    if (!st[id]) st[id] = { won: 0, lost: 0, gw: 0, gl: 0, pf: 0, pa: 0 };
+    return st[id];
+  }
+  state.matches.forEach(function (m) {
+    if (keep && !keep(m)) return;
+    var A = resolveSlot(state, m.a), B = resolveSlot(state, m.b);
+    if (!A || !B) return;
+    m.games.forEach(function (game) {
+      if (game[0] === null || game[1] === null) return;
+      row(A).pf += game[0]; row(A).pa += game[1];
+      row(B).pf += game[1]; row(B).pa += game[0];
+      var w = gameWinner(game);
+      if (w === 'a') { row(A).gw++; row(B).gl++; }
+      else if (w === 'b') { row(B).gw++; row(A).gl++; }
+    });
+    var mw = matchWinner(state, m);
+    if (mw === 'a') { row(A).won++; row(B).lost++; }
+    else if (mw === 'b') { row(B).won++; row(A).lost++; }
+  });
+  return st;
+}
+
+/* Everything played so far. */
+function overallStats(state) {
+  return statsFor(state, null);
+}
+
+/* Group stage plus quarter-finals only. Those slots never depend on the seeding,
+   so ranking the four quarter-final winners cannot loop back on itself. */
+function seedingStats(state) {
+  return statsFor(state, function (m) { return m.stage === 'group' || m.stage === 'qf'; });
+}
+
+function groupRankOf(state, pid) {
+  var rank = 99;
+  state.groups.forEach(function (g) {
+    standings(state, g.id).forEach(function (r, i) { if (r.id === pid) rank = i + 1; });
+  });
+  return rank;
+}
+
+/* The four quarter-final winners, ranked. Rank 1 is the strongest record so far. */
+function semiSeeds(state) {
+  if (!state._memo) state._memo = {};
+  if (state._memo.seeds) return state._memo.seeds;
+  var winners = [];
+  ['QF1', 'QF2', 'QF3', 'QF4'].forEach(function (id) {
+    var m = findMatch(state, id);
+    if (!m) return;
+    var w = matchWinner(state, m);
+    if (!w) return;
+    var pid = resolveSlot(state, w === 'a' ? m.a : m.b);
+    if (pid && winners.indexOf(pid) < 0) winners.push(pid);
+  });
+
+  var st = seedingStats(state);
+  function s(id) { return st[id] || { won: 0, lost: 0, gw: 0, gl: 0, pf: 0, pa: 0 }; }
+  winners.sort(function (x, y) {
+    var a = s(x), b = s(y);
+    if (b.won !== a.won) return b.won - a.won;
+    if ((b.gw - b.gl) !== (a.gw - a.gl)) return (b.gw - b.gl) - (a.gw - a.gl);
+    if ((b.pf - b.pa) !== (a.pf - a.pa)) return (b.pf - b.pa) - (a.pf - a.pa);
+    var gr = groupRankOf(state, x) - groupRankOf(state, y);
+    if (gr) return gr;
+    return String(playerName(state, x)).localeCompare(String(playerName(state, y)));
+  });
+
+  var out = [null, null, null, null];
+  var pool = winners.slice();
+  var ov = state.seedOverride || {};
+  [1, 2, 3, 4].forEach(function (n) {
+    var pid = ov[n] || ov[String(n)];
+    if (pid && pool.indexOf(pid) >= 0) {
+      out[n - 1] = pid;
+      pool.splice(pool.indexOf(pid), 1);
+    }
+  });
+  for (var i = 0; i < 4; i++) if (!out[i]) out[i] = pool.shift() || null;
+  state._memo.seeds = out;
+  return out;
+}
+
+function resolveSlot(state, slot) {
+  if (!slot) return null;
+  if (slot.override) return slot.override;
+  var m, w;
+  switch (slot.k) {
+    case 'player':
+      return slot.id || null;
+    case 'grouppos':
+      var row = standings(state, slot.group)[slot.pos - 1];
+      return row ? row.id : null;
+    case 'seed':
+      return semiSeeds(state)[slot.n - 1] || null;
+    case 'winner':
+      m = findMatch(state, slot.of);
+      if (!m) return null;
+      w = matchWinner(state, m);
+      return w ? resolveSlot(state, w === 'a' ? m.a : m.b) : null;
+    case 'loser':
+      m = findMatch(state, slot.of);
+      if (!m) return null;
+      w = matchWinner(state, m);
+      return w ? resolveSlot(state, w === 'a' ? m.b : m.a) : null;
+    default:
+      return null;
+  }
+}
+
+/* True while the slot is still a projection rather than a settled result. */
+function slotProvisional(state, slot) {
+  if (!slot || slot.override) return false;
+  if (slot.k === 'grouppos') return !groupComplete(state, slot.group);
+  if (slot.k === 'seed') return semiSeeds(state).filter(Boolean).length < 4;
+  return false;
+}
+
+/* ---------- maintenance ---------- */
+
+function resizeGames(state) {
+  var n = state.config.gamesPerMatch;
+  state.matches.forEach(function (m) {
+    if (!Array.isArray(m.games)) m.games = [];
+    while (m.games.length < n) m.games.push([null, null]);
+    if (m.games.length > n) m.games = m.games.slice(0, n);
+  });
+}
+
+/* Accepts a loaded file, fills in anything missing, keeps what is usable. */
+function normalize(raw) {
+  var base = makeState((raw && raw.config && raw.config.format) === 12 ? 12 : 16);
+  if (!raw || typeof raw !== 'object') return base;
+
+  var s = {
+    version: 1,
+    meta: Object.assign({}, base.meta, raw.meta || {}),
+    config: Object.assign({}, base.config, raw.config || {}),
+    groups: Array.isArray(raw.groups) && raw.groups.length === 4 ? raw.groups : base.groups,
+    matches: Array.isArray(raw.matches) ? raw.matches : [],
+    standingOverride: raw.standingOverride || {},
+    seedOverride: raw.seedOverride || {}
+  };
+
+  s.config.format = s.config.format === 12 ? 12 : 16;
+  s.config.pointsToWin = Math.max(1, parseInt(s.config.pointsToWin, 10) || 21);
+  s.config.cap = Math.max(0, parseInt(s.config.cap, 10) || 0);
+  s.config.gamesPerMatch = [1, 3, 5, 7].indexOf(s.config.gamesPerMatch) >= 0 ? s.config.gamesPerMatch : 3;
+
+  var per = s.config.format === 12 ? 3 : 4;
+  s.groups = GROUP_IDS.map(function (gid, gi) {
+    var src = s.groups[gi] || {};
+    var players = [];
+    for (var i = 1; i <= per; i++) {
+      var p = (src.players || [])[i - 1] || {};
+      players.push({ id: gid + i, name: p.name || 'Player ' + gid + i });
+    }
+    return { id: gid, name: src.name || 'Group ' + gid, players: players };
+  });
+
+  /* Rebuild the fixture list, carrying over any scores that still apply. */
+  var kept = {};
+  s.matches.forEach(function (m) { if (m && m.id) kept[m.id] = m; });
+  var fresh = buildGroupMatches(s).concat(buildKnockoutMatches(s));
+  s.matches = fresh.map(function (m) {
+    var old = kept[m.id];
+    if (!old) return m;
+    m.games = Array.isArray(old.games) ? old.games.map(function (g) {
+      return [numOrNull(g && g[0]), numOrNull(g && g[1])];
+    }) : m.games;
+    m.winner = (old.winner === 'a' || old.winner === 'b') ? old.winner : null;
+    m.note = typeof old.note === 'string' ? old.note : '';
+    if (old.a && old.a.override) m.a.override = old.a.override;
+    if (old.b && old.b.override) m.b.override = old.b.override;
+    return m;
+  });
+  resizeGames(s);
+  return touch(s);
+}
+
+function numOrNull(v) {
+  if (v === null || v === undefined || v === '') return null;
+  var n = parseInt(v, 10);
+  return isNaN(n) ? null : n;
+}
+
+</script>
+<script>
+/* ============================================================
+   Interface layer. Renders the state produced by the model above
+   and writes every edit straight back into it.
+   ============================================================ */
+
+var S = makeState(16);
+var VIEW = 'setup';
+var app, toastEl, toastTimer;
+
+function esc(v) {
+  return String(v === null || v === undefined ? '' : v)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { toastEl.classList.remove('on'); }, 2200);
+}
+
+function commit() {
+  touch(S);
+  render();
+  stash();
+}
+
+/* A private copy on this device, so a refresh or a phone locking itself
+   does not cost you the scores. Wrapped so it can never break the page. */
+var STORE_KEY = 'badminton-tournament-v1';
+var stashTimer;
+
+function stash() {
+  clearTimeout(stashTimer);
+  stashTimer = setTimeout(function () {
+    try { window.localStorage.setItem(STORE_KEY, toJSON()); } catch (e) { /* no storage here */ }
+  }, 400);
+}
+
+function unstash() {
+  try {
+    var t = window.localStorage.getItem(STORE_KEY);
+    if (t) return JSON.parse(t);
+  } catch (e) { /* no storage here */ }
+  return null;
+}
+
+function dropStash() {
+  try { window.localStorage.removeItem(STORE_KEY); } catch (e) { /* no storage here */ }
+}
+
+/* ---------- shared pieces ---------- */
+
+function nameOf(pid, fallback) {
+  return pid ? playerName(S, pid) : (fallback || '');
+}
+
+function slotLabel(m, side) {
+  var slot = side === 'a' ? m.a : m.b;
+  var pid = resolveSlot(S, slot);
+  if (pid) return esc(playerName(S, pid));
+  if (slot.k === 'grouppos') return 'Group ' + slot.group + ', place ' + slot.pos;
+  if (slot.k === 'seed') return 'Seed ' + slot.n;
+  if (slot.k === 'winner') return 'Winner of ' + slot.of;
+  if (slot.k === 'loser') return 'Loser of ' + slot.of;
+  return 'To be decided';
+}
+
+function matchCard(m, headline) {
+  var n = S.config.gamesPerMatch;
+  var w = matchWinner(S, m);
+  var pidA = resolveSlot(S, m.a), pidB = resolveSlot(S, m.b);
+  var prov = slotProvisional(S, m.a) || slotProvisional(S, m.b);
+  var h = '';
+
+  h += '<article class="match' + (w ? ' settled' : '') + '" data-m="' + m.id + '">';
+  h += '<header class="match-top">';
+  h += '<span class="tag">' + esc(headline) + '</span>';
+  if (prov) h += '<span class="prov">projected</span>';
+  h += '<input class="note" type="text" data-act="note" data-m="' + m.id + '" data-fk="note:' + m.id + '" value="' + esc(m.note || '') + '" placeholder="Court / time">';
+  h += '</header>';
+
+  h += '<div class="board g' + n + '" style="--games:' + n + '">';
+  h += '<div class="col-key"></div>';
+  for (var i = 1; i <= n; i++) h += '<div class="col-key">' + i + '</div>';
+
+  ['a', 'b'].forEach(function (side) {
+    var pid = side === 'a' ? pidA : pidB;
+    h += '<div class="who' + (w === side ? ' won' : '') + '">' + slotLabel(m, side) + '</div>';
+    for (var g = 0; g < n; g++) {
+      var v = m.games[g] ? m.games[g][side === 'a' ? 0 : 1] : null;
+      var issue = gameIssue(S.config, m.games[g] || [null, null]);
+      h += '<input class="sc' + (issue ? ' flag' : '') + '" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="3"' +
+        ' data-act="score" data-m="' + m.id + '" data-g="' + g + '" data-s="' + side + '"' +
+        ' data-fk="sc:' + m.id + ':' + g + ':' + side + '"' +
+        ' value="' + (v === null || v === undefined ? '' : v) + '"' +
+        (pid ? '' : ' disabled') + '>';
+    }
+  });
+  h += '</div>';
+
+  var issues = [];
+  m.games.forEach(function (g, i) {
+    var msg = gameIssue(S.config, g);
+    if (msg) issues.push('Game ' + (i + 1) + ': ' + msg);
+  });
+
+  h += '<footer class="match-bottom">';
+  h += '<span class="verdict">' + (w
+    ? esc(nameOf(w === 'a' ? pidA : pidB)) + ' wins ' + gamesWon(m)[w === 'a' ? 0 : 1] + '&ndash;' + gamesWon(m)[w === 'a' ? 1 : 0] + (m.winner ? ' (set by hand)' : '')
+    : (pidA && pidB ? 'No result yet' : 'Waiting on earlier matches')) + '</span>';
+  if (pidA && pidB) {
+    h += '<span class="pick">';
+    h += '<button type="button" class="mini' + (m.winner === 'a' ? ' on' : '') + '" data-act="force" data-m="' + m.id + '" data-s="a">Give to ' + esc(shortName(nameOf(pidA))) + '</button>';
+    h += '<button type="button" class="mini' + (m.winner === 'b' ? ' on' : '') + '" data-act="force" data-m="' + m.id + '" data-s="b">Give to ' + esc(shortName(nameOf(pidB))) + '</button>';
+    if (m.winner) h += '<button type="button" class="mini" data-act="force" data-m="' + m.id + '" data-s="">Use the score</button>';
+    h += '</span>';
+  }
+  h += '</footer>';
+  if (issues.length) h += '<p class="issues">' + esc(issues.join(' \u00b7 ')) + '</p>';
+  h += '</article>';
+  return h;
+}
+
+function shortName(n) {
+  n = String(n || '').trim();
+  if (n.length <= 12) return n;
+  return n.slice(0, 11) + '\u2026';
+}
+
+function slotPicker(m, side) {
+  var slot = side === 'a' ? m.a : m.b;
+  var h = '<select class="picker" data-act="slot" data-m="' + m.id + '" data-s="' + side + '" data-fk="slot:' + m.id + ':' + side + '">';
+  var auto = resolveSlot(S, { k: slot.k, group: slot.group, pos: slot.pos, n: slot.n, of: slot.of, id: slot.id });
+  h += '<option value=""' + (slot.override ? '' : ' selected') + '>Automatic' + (auto ? ' \u2014 ' + esc(playerName(S, auto)) : '') + '</option>';
+  allPlayers(S).forEach(function (p) {
+    h += '<option value="' + p.id + '"' + (slot.override === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>';
+  });
+  h += '</select>';
+  return h;
+}
+
+/* ---------- views ---------- */
+
+function viewSetup() {
+  var c = S.config, h = '';
+
+  h += '<section class="panel">';
+  h += '<h2>Tournament</h2>';
+  h += '<div class="fields">';
+  h += field('Name', '<input type="text" data-act="meta" data-k="name" data-fk="meta:name" value="' + esc(S.meta.name) + '" placeholder="Name of the event">');
+  h += field('Venue', '<input type="text" data-act="meta" data-k="venue" data-fk="meta:venue" value="' + esc(S.meta.venue) + '" placeholder="Hall or club">');
+  h += field('Date', '<input type="text" data-act="meta" data-k="date" data-fk="meta:date" value="' + esc(S.meta.date) + '" placeholder="e.g. 14 March">');
+  h += '</div></section>';
+
+  h += '<section class="panel">';
+  h += '<h2>Draw size</h2>';
+  h += '<div class="segmented">';
+  [12, 16].forEach(function (f) {
+    h += '<button type="button" class="seg' + (c.format === f ? ' on' : '') + '" data-act="format" data-v="' + f + '">' + f + ' players</button>';
+  });
+  h += '</div>';
+  h += '<p class="hint">' + (c.format === 12 ? 'Four groups of three. Each group plays 3 matches.' : 'Four groups of four. Each group plays 6 matches.') + ' The top two in every group reach the quarter-finals.</p>';
+  h += '</section>';
+
+  h += '<section class="panel">';
+  h += '<h2>Scoring</h2>';
+  h += '<div class="fields">';
+  h += field('Points to win a game', '<input type="text" inputmode="numeric" data-act="cfgnum" data-k="pointsToWin" data-fk="cfg:pointsToWin" value="' + c.pointsToWin + '">');
+  h += field('Highest possible score', '<input type="text" inputmode="numeric" data-act="cfgnum" data-k="cap" data-fk="cfg:cap" value="' + c.cap + '">');
+  h += '</div>';
+  h += '<label class="check"><input type="checkbox" data-act="cfgbool" data-k="winByTwo"' + (c.winByTwo ? ' checked' : '') + '> Winner must lead by two points</label>';
+  h += '<p class="hint">Put any number in the first box &mdash; 11, 15, 21, 25, whatever you are playing to. Set the highest score to 0 if a game can run on without a ceiling.</p>';
+  h += '<h3>Games per match</h3>';
+  h += '<div class="segmented">';
+  [1, 3, 5].forEach(function (g) {
+    h += '<button type="button" class="seg' + (c.gamesPerMatch === g ? ' on' : '') + '" data-act="best" data-v="' + g + '">Best of ' + g + '</button>';
+  });
+  h += '</div>';
+  h += '<label class="check"><input type="checkbox" data-act="cfgbool" data-k="thirdPlace"' + (c.thirdPlace ? ' checked' : '') + '> Play a third-place match</label>';
+  h += '</section>';
+
+  h += '<section class="panel">';
+  h += '<h2>Players</h2>';
+  h += '<p class="hint">Type over any name. It changes everywhere at once, including matches already played.</p>';
+  h += '<div class="roster">';
+  S.groups.forEach(function (g) {
+    h += '<div class="roster-group">';
+    h += '<input class="gname" type="text" data-act="gname" data-g="' + g.id + '" data-fk="gname:' + g.id + '" value="' + esc(g.name) + '">';
+    g.players.forEach(function (p, i) {
+      h += '<div class="roster-row"><span class="seat">' + (i + 1) + '</span>' +
+        '<input type="text" data-act="pname" data-p="' + p.id + '" data-fk="pname:' + p.id + '" value="' + esc(p.name) + '" placeholder="Player name"></div>';
+    });
+    h += '</div>';
+  });
+  h += '</div></section>';
+
+  h += '<section class="panel">';
+  h += '<h2>Saving</h2>';
+  h += '<p class="hint">The page keeps your tournament while it is open. Save a file to carry it between phones or to keep a copy of the finished draw.</p>';
+  h += '<div class="row-btns">';
+  h += '<button type="button" class="btn primary" data-act="save">Save to a file</button>';
+  h += '<button type="button" class="btn" data-act="open">Open a file</button>';
+  h += '<button type="button" class="btn" data-act="copy">Copy as text</button>';
+  h += '<button type="button" class="btn" data-act="pastepanel">Paste text</button>';
+  h += '</div>';
+  h += '<div class="paste" id="pastePanel" hidden>';
+  h += '<textarea id="pasteBox" rows="5" placeholder="Paste saved tournament text here"></textarea>';
+  h += '<button type="button" class="btn primary" data-act="pasteload">Load this text</button>';
+  h += '</div>';
+  h += '<div class="row-btns spaced">';
+  h += '<button type="button" class="btn quiet" data-act="clearscores">Clear all scores</button>';
+  h += '<button type="button" class="btn quiet" data-act="reset">Start a new tournament</button>';
+  h += '</div>';
+  h += '</section>';
+  return h;
+}
+
+function field(label, input) {
+  return '<label class="field"><span>' + esc(label) + '</span>' + input + '</label>';
+}
+
+function viewGroups() {
+  var h = '';
+  S.groups.forEach(function (g) {
+    var ms = S.matches.filter(function (m) { return m.stage === 'group' && m.group === g.id; });
+    var done = ms.filter(function (m) { return matchWinner(S, m); }).length;
+    h += '<section class="panel">';
+    h += '<h2>' + esc(g.name) + '<span class="count">' + done + ' of ' + ms.length + ' played</span></h2>';
+    var round = 0;
+    ms.forEach(function (m) {
+      if (m.round !== round) { round = m.round; h += '<h3 class="round">Round ' + round + '</h3>'; }
+      h += matchCard(m, esc(g.name));
+    });
+    h += '</section>';
+  });
+  return h;
+}
+
+function viewTables() {
+  var h = '';
+  h += '<p class="lede">Order is worked out from matches won, then the head-to-head result, then games, then points. Nudge anyone up or down if you settle a tie another way.</p>';
+  S.groups.forEach(function (g) {
+    var rows = standings(S, g.id);
+    var over = (S.standingOverride || {})[g.id];
+    h += '<section class="panel">';
+    h += '<h2>' + esc(g.name) + (over && over.length ? '<span class="count">ordered by hand</span>' : '') + '</h2>';
+    h += '<table class="table"><thead><tr>' +
+      '<th class="c">#</th><th>Player</th><th class="c drop">P</th><th class="c">W</th><th class="c drop">L</th>' +
+      '<th class="c">Games</th><th class="c">Points</th><th></th></tr></thead><tbody>';
+    rows.forEach(function (r, i) {
+      h += '<tr class="' + (i < 2 ? 'through' : '') + '">';
+      h += '<td class="c pos">' + (i + 1) + '</td>';
+      h += '<td class="pl">' + esc(r.name) + (i < 2 ? '<span class="dot" title="Into the quarter-finals"></span>' : '') + '</td>';
+      h += '<td class="c drop">' + r.played + '</td><td class="c">' + r.won + '</td><td class="c drop">' + r.lost + '</td>';
+      h += '<td class="c num">' + r.gw + '&ndash;' + r.gl + '</td>';
+      h += '<td class="c num">' + r.pf + '&ndash;' + r.pa + '</td>';
+      h += '<td class="c nudge">' +
+        '<button type="button" class="arrow" data-act="move" data-g="' + g.id + '" data-p="' + r.id + '" data-d="-1"' + (i === 0 ? ' disabled' : '') + ' aria-label="Move up">&#9650;</button>' +
+        '<button type="button" class="arrow" data-act="move" data-g="' + g.id + '" data-p="' + r.id + '" data-d="1"' + (i === rows.length - 1 ? ' disabled' : '') + ' aria-label="Move down">&#9660;</button>' +
+        '</td></tr>';
+    });
+    h += '</tbody></table>';
+    if (over && over.length) h += '<button type="button" class="btn quiet" data-act="autoorder" data-g="' + g.id + '">Go back to the calculated order</button>';
+    h += '</section>';
+  });
+  return h;
+}
+
+function viewKnockout() {
+  var h = '';
+  var qfReady = S.groups.every(function (g) { return groupComplete(S, g.id); });
+
+  h += '<section class="panel">';
+  h += '<h2>Quarter-finals</h2>';
+  h += '<p class="hint">Group A meets Group B, Group C meets Group D. Each group winner draws the runner-up from the other group.' +
+    (qfReady ? '' : ' Names shown now are a projection from the tables so far.') + '</p>';
+  ['QF1', 'QF2', 'QF3', 'QF4'].forEach(function (id) {
+    var m = findMatch(S, id);
+    h += matchCard(m, m.label);
+    h += '<div class="swap">' + slotPicker(m, 'a') + slotPicker(m, 'b') + '</div>';
+  });
+  h += '</section>';
+
+  var seeds = semiSeeds(S);
+  h += '<section class="panel">';
+  h += '<h2>Semi-finals</h2>';
+  h += '<p class="hint">The four quarter-final winners are ranked on their record so far. First plays fourth, second plays third.</p>';
+  h += '<ol class="seeds">';
+  [1, 2, 3, 4].forEach(function (n) {
+    h += '<li><span class="rank">' + n + '</span>' +
+      '<select class="picker" data-act="seed" data-n="' + n + '" data-fk="seed:' + n + '">' +
+      '<option value="">Automatic' + (seeds[n - 1] ? ' \u2014 ' + esc(playerName(S, seeds[n - 1])) : '') + '</option>' +
+      allPlayers(S).map(function (p) {
+        var sel = (S.seedOverride || {})[n] === p.id ? ' selected' : '';
+        return '<option value="' + p.id + '"' + sel + '>' + esc(p.name) + '</option>';
+      }).join('') + '</select></li>';
+  });
+  h += '</ol>';
+  ['SF1', 'SF2'].forEach(function (id) {
+    var m = findMatch(S, id);
+    h += matchCard(m, m.label);
+    h += '<div class="swap">' + slotPicker(m, 'a') + slotPicker(m, 'b') + '</div>';
+  });
+  h += '</section>';
+
+  if (S.config.thirdPlace) {
+    var tp = findMatch(S, 'TP');
+    h += '<section class="panel"><h2>Third place</h2>' + matchCard(tp, tp.label) +
+      '<div class="swap">' + slotPicker(tp, 'a') + slotPicker(tp, 'b') + '</div></section>';
+  }
+
+  var f = findMatch(S, 'F');
+  h += '<section class="panel final"><h2>Final</h2>' + matchCard(f, f.label) +
+    '<div class="swap">' + slotPicker(f, 'a') + slotPicker(f, 'b') + '</div></section>';
+  return h;
+}
+
+function viewSummary() {
+  var f = findMatch(S, 'F');
+  var fw = matchWinner(S, f);
+  var champ = fw ? resolveSlot(S, fw === 'a' ? f.a : f.b) : null;
+  var runner = fw ? resolveSlot(S, fw === 'a' ? f.b : f.a) : null;
+  var h = '';
+
+  h += '<section class="panel crown">';
+  if (champ) {
+    h += '<p class="crown-label">Champion</p><p class="crown-name">' + esc(playerName(S, champ)) + '</p>';
+    h += '<p class="crown-sub">Runner-up ' + esc(playerName(S, runner)) + '</p>';
+    if (S.config.thirdPlace) {
+      var tp = findMatch(S, 'TP'), tw = matchWinner(S, tp);
+      if (tw) h += '<p class="crown-sub">Third ' + esc(playerName(S, resolveSlot(S, tw === 'a' ? tp.a : tp.b))) + '</p>';
+    }
+  } else {
+    h += '<p class="crown-label">Champion</p><p class="crown-name pending">Still to be won</p>';
+    h += '<p class="crown-sub">' + countdown() + '</p>';
+  }
+  h += '</section>';
+
+  h += '<section class="panel"><h2>The draw</h2><div class="bracket">';
+  h += bracketColumn('Quarter-finals', ['QF1', 'QF2', 'QF3', 'QF4']);
+  h += bracketColumn('Semi-finals', ['SF1', 'SF2']);
+  h += bracketColumn('Final', S.config.thirdPlace ? ['F', 'TP'] : ['F']);
+  h += '</div></section>';
+
+  h += '<section class="panel"><h2>Where things stand</h2>';
+  S.groups.forEach(function (g) {
+    h += '<p class="line"><b>' + esc(g.name) + '</b> ' +
+      standings(S, g.id).map(function (r, i) { return (i + 1) + '. ' + esc(r.name); }).join('  ') + '</p>';
+  });
+  h += '</section>';
+
+  h += '<div class="row-btns no-print"><button type="button" class="btn" data-act="print">Print this page</button>' +
+    '<button type="button" class="btn primary" data-act="save">Save to a file</button></div>';
+  return h;
+}
+
+function countdown() {
+  var total = 0, done = 0;
+  S.matches.forEach(function (m) {
+    if (m.stage === 'third' && !S.config.thirdPlace) return;
+    total++;
+    if (matchWinner(S, m)) done++;
+  });
+  return done + ' of ' + total + ' matches played';
+}
+
+function bracketColumn(title, ids) {
+  var h = '<div class="bcol"><h3>' + esc(title) + '</h3>';
+  ids.forEach(function (id) {
+    var m = findMatch(S, id);
+    var w = matchWinner(S, m);
+    var gw = gamesWon(m);
+    h += '<div class="bmatch">';
+    ['a', 'b'].forEach(function (side) {
+      h += '<div class="brow' + (w === side ? ' won' : '') + '">' +
+        '<span>' + slotLabel(m, side) + '</span>' +
+        '<b>' + (w ? gw[side === 'a' ? 0 : 1] : '') + '</b></div>';
+    });
+    var line = m.games.filter(function (g) { return g[0] !== null && g[1] !== null; })
+      .map(function (g) { return g[0] + '-' + g[1]; }).join(', ');
+    if (line) h += '<div class="bscore">' + esc(line) + '</div>';
+    h += '</div>';
+  });
+  return h + '</div>';
+}
+
+/* ---------- render ---------- */
+
+var TABS = [
+  ['setup', 'Set up'],
+  ['groups', 'Groups'],
+  ['tables', 'Standings'],
+  ['ko', 'Knockout'],
+  ['summary', 'Summary']
+];
+
+function render() {
+  var active = document.activeElement;
+  var fk = active && active.getAttribute ? active.getAttribute('data-fk') : null;
+  var caret = null;
+  try { caret = active && active.selectionStart; } catch (e) { caret = null; }
+
+  document.getElementById('title').textContent = S.meta.name || 'Badminton tournament';
+  var sub = [S.meta.venue, S.meta.date].filter(Boolean).join(', ');
+  var subEl = document.getElementById('subtitle');
+  subEl.textContent = sub || (S.config.format + ' players, best of ' + S.config.gamesPerMatch + ' to ' + S.config.pointsToWin);
+
+  document.getElementById('tabs').innerHTML = TABS.map(function (t) {
+    return '<button type="button" class="tab' + (VIEW === t[0] ? ' on' : '') + '" data-act="tab" data-v="' + t[0] + '">' + t[1] + '</button>';
+  }).join('');
+
+  var body = '';
+  if (VIEW === 'setup') body = viewSetup();
+  else if (VIEW === 'groups') body = viewGroups();
+  else if (VIEW === 'tables') body = viewTables();
+  else if (VIEW === 'ko') body = viewKnockout();
+  else body = viewSummary();
+  app.innerHTML = body;
+
+  if (fk) {
+    var back = app.querySelector('[data-fk="' + fk + '"]');
+    if (back) {
+      back.focus({ preventScroll: true });
+      if (caret !== null && back.setSelectionRange) {
+        try { back.setSelectionRange(caret, caret); } catch (e) { /* not a text field */ }
+      }
+    }
+  }
+}
+
+/* ---------- events ---------- */
+
+function num(v) {
+  var d = String(v).replace(/[^0-9]/g, '').slice(0, 3);
+  return d === '' ? null : parseInt(d, 10);
+}
+
+function onInput(e) {
+  var t = e.target, act = t.getAttribute('data-act');
+  if (!act) return;
+
+  if (act === 'score') {
+    var m = findMatch(S, t.getAttribute('data-m'));
+    var g = parseInt(t.getAttribute('data-g'), 10);
+    var v = num(t.value);
+    if (String(v === null ? '' : v) !== t.value) t.value = v === null ? '' : v;
+    if (!m.games[g]) m.games[g] = [null, null];
+    m.games[g][t.getAttribute('data-s') === 'a' ? 0 : 1] = v;
+    commit();
+  } else if (act === 'pname') {
+    var p = findPlayer(S, t.getAttribute('data-p'));
+    if (p) { p.name = t.value; commit(); }
+  } else if (act === 'gname') {
+    S.groups.forEach(function (g2) { if (g2.id === t.getAttribute('data-g')) g2.name = t.value; });
+    commit();
+  } else if (act === 'meta') {
+    S.meta[t.getAttribute('data-k')] = t.value;
+    commit();
+  } else if (act === 'cfgnum') {
+    var k = t.getAttribute('data-k');
+    var d = String(t.value).replace(/[^0-9]/g, '').slice(0, 3);
+    if (d !== t.value) t.value = d;
+    S.config[k] = d === '' ? 0 : parseInt(d, 10);
+    commit();
+  } else if (act === 'note') {
+    var mn = findMatch(S, t.getAttribute('data-m'));
+    if (mn) { mn.note = t.value; stash(); }
+  }
+}
+
+function onChange(e) {
+  var t = e.target, act = t.getAttribute('data-act');
+  if (!act) return;
+
+  if (act === 'cfgbool') {
+    S.config[t.getAttribute('data-k')] = t.checked;
+    commit();
+  } else if (act === 'slot') {
+    var m = findMatch(S, t.getAttribute('data-m'));
+    var slot = t.getAttribute('data-s') === 'a' ? m.a : m.b;
+    if (t.value) slot.override = t.value; else delete slot.override;
+    commit();
+  } else if (act === 'seed') {
+    var n = t.getAttribute('data-n');
+    S.seedOverride = S.seedOverride || {};
+    if (t.value) S.seedOverride[n] = t.value; else delete S.seedOverride[n];
+    commit();
+  }
+}
+
+function onClick(e) {
+  var t = e.target.closest('[data-act]');
+  if (!t) return;
+  var act = t.getAttribute('data-act');
+
+  if (act === 'tab') {
+    VIEW = t.getAttribute('data-v');
+    render();
+    window.scrollTo(0, 0);
+  } else if (act === 'format') {
+    var f = parseInt(t.getAttribute('data-v'), 10);
+    if (f === S.config.format) return;
+    if (!confirm('Switching to ' + f + ' players rebuilds the fixtures and clears the scores. Player names are kept. Continue?')) return;
+    var old = S;
+    var next = makeState(f);
+    next.meta = old.meta;
+    next.config = Object.assign({}, old.config, { format: f });
+    next.groups.forEach(function (g, gi) {
+      var og = old.groups[gi];
+      if (!og) return;
+      g.name = og.name;
+      g.players.forEach(function (p, pi) {
+        if (og.players[pi]) p.name = og.players[pi].name;
+      });
+    });
+    S = normalize(next);
+    commit();
+    toast('Fixtures rebuilt for ' + f + ' players');
+  } else if (act === 'best') {
+    S.config.gamesPerMatch = parseInt(t.getAttribute('data-v'), 10);
+    resizeGames(S);
+    commit();
+  } else if (act === 'force') {
+    var m = findMatch(S, t.getAttribute('data-m'));
+    var s = t.getAttribute('data-s');
+    m.winner = (s === 'a' || s === 'b') ? (m.winner === s ? null : s) : null;
+    commit();
+  } else if (act === 'move') {
+    var gid = t.getAttribute('data-g'), pid = t.getAttribute('data-p'), d = parseInt(t.getAttribute('data-d'), 10);
+    var order = standings(S, gid).map(function (r) { return r.id; });
+    var i = order.indexOf(pid), j = i + d;
+    if (i < 0 || j < 0 || j >= order.length) return;
+    order[i] = order[j]; order[j] = pid;
+    S.standingOverride = S.standingOverride || {};
+    S.standingOverride[gid] = order;
+    commit();
+  } else if (act === 'autoorder') {
+    delete S.standingOverride[t.getAttribute('data-g')];
+    commit();
+  } else if (act === 'save') {
+    saveFile();
+  } else if (act === 'open') {
+    document.getElementById('fileIn').click();
+  } else if (act === 'copy') {
+    copyText();
+  } else if (act === 'pastepanel') {
+    var p = document.getElementById('pastePanel');
+    p.hidden = !p.hidden;
+    if (!p.hidden) document.getElementById('pasteBox').focus();
+  } else if (act === 'pasteload') {
+    loadText(document.getElementById('pasteBox').value);
+  } else if (act === 'clearscores') {
+    if (!confirm('Clear every score and start the matches again? Names and settings stay as they are.')) return;
+    S.matches.forEach(function (mm) {
+      mm.games = mm.games.map(function () { return [null, null]; });
+      mm.winner = null;
+    });
+    S.standingOverride = {}; S.seedOverride = {};
+    S.matches.forEach(function (mm) { delete mm.a.override; delete mm.b.override; });
+    commit();
+    toast('Scores cleared');
+  } else if (act === 'reset') {
+    if (!confirm('Start again from an empty tournament? Everything on this page will go.')) return;
+    dropStash();
+    S = makeState(S.config.format);
+    VIEW = 'setup';
+    commit();
+    toast('New tournament ready');
+  } else if (act === 'print') {
+    window.print();
+  }
+}
+
+/* ---------- files ---------- */
+
+function toJSON() {
+  return JSON.stringify(S, function (k, v) { return k.charAt(0) === '_' ? undefined : v; }, 2);
+}
+
+function fileName() {
+  var base = (S.meta.name || 'badminton-tournament').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  return (base || 'badminton-tournament') + '.json';
+}
+
+function saveFile() {
+  try {
+    var blob = new Blob([toJSON()], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = fileName();
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    toast('Saved as ' + fileName());
+  } catch (err) {
+    toast('Could not save a file. Use "Copy as text" instead.');
+  }
+}
+
+function copyText() {
+  var text = toJSON();
+  function fallback() {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('Copied'); }
+    catch (e) { toast('Copy did not work. Select the text in the paste box instead.'); }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { toast('Copied'); }, fallback);
+  } else fallback();
+}
+
+function loadText(text) {
+  if (!text || !text.trim()) { toast('Nothing to load. Paste the saved text first.'); return; }
+  var data;
+  try { data = JSON.parse(text); }
+  catch (e) { toast('That text is not a saved tournament.'); return; }
+  S = normalize(data);
+  VIEW = 'groups';
+  commit();
+  toast('Tournament loaded');
+}
+
+function onFile(e) {
+  var f = e.target.files && e.target.files[0];
+  if (!f) return;
+  var r = new FileReader();
+  r.onload = function () { loadText(String(r.result)); };
+  r.onerror = function () { toast('That file could not be read.'); };
+  r.readAsText(f);
+  e.target.value = '';
+}
+
+/* ---------- start ---------- */
+
+function boot() {
+  app = document.getElementById('app');
+  toastEl = document.getElementById('toast');
+  document.addEventListener('input', onInput);
+  document.addEventListener('change', onChange);
+  document.addEventListener('click', onClick);
+  document.getElementById('fileIn').addEventListener('change', onFile);
+  document.addEventListener('focusin', function (e) {
+    if (e.target.classList && e.target.classList.contains('sc')) e.target.select();
+  });
+  window.addEventListener('beforeunload', function (e) {
+    var played = S.matches.some(function (m) { return matchWinner(S, m); });
+    if (played) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  var saved = unstash();
+  if (saved) {
+    S = normalize(saved);
+    var any = S.matches.some(function (m) { return matchWinner(S, m); });
+    VIEW = any ? 'groups' : 'setup';
+    render();
+    if (any) toast('Picked up where you left off');
+    return;
+  }
+  render();
+}
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+else boot();
+
+</script>
+<script src="sync.js"></script>
+<script src="agent.js"></script>
+</body>
+</html>
